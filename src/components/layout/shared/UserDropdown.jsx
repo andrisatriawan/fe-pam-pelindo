@@ -52,6 +52,8 @@ const UserDropdown = () => {
   }
 
   const handleDropdownClose = (event, url) => {
+    console.log(url)
+
     if (url) {
       router.push(url)
     }
@@ -120,7 +122,7 @@ const UserDropdown = () => {
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e)}>
+                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/profile/change-password')}>
                     <i className='tabler-settings' />
                     <Typography color='text.primary'>Settings</Typography>
                   </MenuItem>

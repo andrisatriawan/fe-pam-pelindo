@@ -229,3 +229,51 @@ export const createUser = async dataUser => {
     }
   }
 }
+
+export const changePassword = async dataUser => {
+  try {
+    const token = Cookies.get('token')
+
+    let urlRequest = `${url}v1/user/profile/change-password`
+
+    if (!token) {
+      const refreshSuccess = await refreshToken()
+
+      if (refreshSuccess) {
+        return changePassword(dataUser)
+      } else {
+        throw new Error('Session expired, please login again.')
+      }
+    }
+
+    const response = await fetch(urlRequest, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(dataUser)
+    })
+
+    if (response.status === 401) {
+      const refreshSuccess = await refreshToken()
+
+      if (refreshSuccess) {
+        return changePassword(dataUser)
+      } else {
+        throw new Error('Session expired, please login again.')
+      }
+    }
+
+    const data = await response.json()
+
+    if (!response.ok) throw new Error(data.message || 'Gagal delete data!')
+
+    return {
+      status: true,
+      message: data.message
+    }
+  } catch (err) {
+    return {
+      status: false,
+      message: err
+    }
+  }
+}
