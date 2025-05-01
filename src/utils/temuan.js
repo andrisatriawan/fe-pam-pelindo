@@ -128,8 +128,8 @@ export const createTemuan = async dataTemuan => {
 
     const response = await fetch(urlRequest, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(dataTemuan)
+      headers: { Authorization: `Bearer ${token}` },
+      body: dataTemuan
     })
 
     if (response.status === 401) {
@@ -224,9 +224,9 @@ export const updateTemuan = async (id, dataTemuan) => {
     }
 
     const response = await fetch(urlRequest, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(dataTemuan)
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: dataTemuan
     })
 
     if (response.status === 401) {

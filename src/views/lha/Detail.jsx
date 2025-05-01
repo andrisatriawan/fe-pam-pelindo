@@ -93,10 +93,13 @@ function Row({ row }) {
             size='small'
           />
         </TableCell>
+        <TableCell align='center'>
+          {row.is_spi && <Chip label='Feedback Auditor' variant='outlined' color='info' size='small' />}
+        </TableCell>
       </TableRow>
       {row.tindaklanjut.length > 0 && (
         <TableRow sx={{ paddingX: 5 }}>
-          <TableCell colSpan={5} style={{ paddingBottom: 0, paddingTop: 0 }}>
+          <TableCell colSpan={6} style={{ paddingBottom: 0, paddingTop: 0 }}>
             <Collapse in={open} timeout='auto' unmountOnExit>
               <Box sx={{ margin: 2 }}>
                 <Table size='small' aria-label='purchases'>
@@ -255,7 +258,7 @@ export default function DetailLha() {
         res = await submitTemuan(sendLha)
       }
 
-      if (user?.permissions?.includes('update status-lha-spv')) {
+      if (user?.permissions?.includes('update status-lha-spv') && !selesaiClosing) {
         res = await sendTemuanPic(sendLha)
       }
 
@@ -311,7 +314,7 @@ export default function DetailLha() {
               status: data.status
             })
           } else {
-            router.replace('/not-found')
+            router.replace('/lha')
           }
         })
 
@@ -389,7 +392,7 @@ export default function DetailLha() {
               status: data.status
             })
           } else {
-            router.replace('/not-found')
+            router.replace('/lha')
           }
         })
       }
@@ -513,7 +516,7 @@ export default function DetailLha() {
               status: data.status
             })
           } else {
-            router.replace('/not-found')
+            router.replace('/lha')
           }
         })
       }
@@ -579,7 +582,7 @@ export default function DetailLha() {
               status: data.status
             })
           } else {
-            router.replace('/not-found')
+            router.replace('/lha')
           }
         })
       }

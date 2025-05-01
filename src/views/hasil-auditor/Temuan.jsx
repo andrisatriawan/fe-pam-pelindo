@@ -584,7 +584,9 @@ export default function Temuan() {
                 columns={[
                   { field: 'id', headerName: 'ID', hide: true },
                   { field: 'no', headerName: 'No', width: 10 },
-                  { field: 'judul', headerName: 'Judul', width: 200 },
+                  { field: 'judul', headerName: 'Judul', width: 150 },
+                  { field: 'unit', headerName: 'Unit', width: 150 },
+                  { field: 'divisi', headerName: 'Divisi', width: 150 },
                   {
                     field: 'rekomendasi',
                     headerName: 'Rekomendasi',
@@ -609,7 +611,7 @@ export default function Temuan() {
                     field: 'aksi',
                     headerName: 'Aksi',
                     headerAlign: 'center',
-                    width: 200,
+                    width: 100,
                     align: 'center',
                     renderCell: params => {
                       if (!params.row.closing) {

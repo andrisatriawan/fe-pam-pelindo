@@ -99,6 +99,55 @@ export const dataFilesByLha = async lha_id => {
   }
 }
 
+export const dataFilesByDivisi = async (dataFiles, divisi_id) => {
+  try {
+    const token = Cookies.get('token')
+
+    let urlRequest = `${url}v1/files/find-by-divisi/${divisi_id}`
+    const query = new URLSearchParams(dataFiles).toString()
+
+    if (!token) {
+      const refreshSuccess = await refreshToken()
+
+      if (refreshSuccess) {
+        return dataFilesByDivisi(divisi_id)
+      } else {
+        throw new Error('Session expired, please login again.')
+      }
+    }
+
+    const response = await fetch(`${urlRequest}?${query}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      data: JSON.stringify(dataFiles)
+    })
+
+    if (response.status === 401) {
+      const refreshSuccess = await refreshToken()
+
+      if (refreshSuccess) {
+        return dataFilesByDivisi(divisi_id)
+      } else {
+        throw new Error('Session expired, please login again.')
+      }
+    }
+
+    const data = await response.json()
+
+    if (!response.ok || response.status != 200) throw new Error(data.message || 'Gagal mengambil data.')
+
+    return {
+      status: true,
+      data: data.data
+    }
+  } catch (err) {
+    return {
+      status: false,
+      message: err
+    }
+  }
+}
+
 export const deleteFile = async id => {
   try {
     const token = Cookies.get('token')

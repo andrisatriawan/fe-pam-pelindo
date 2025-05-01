@@ -43,7 +43,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid'
 import { findRekomendasi } from '@/utils/rekomendasi'
 import { useAuth } from '@/context/AuthContext'
 import FileUploader from '@/components/InputFiles'
-import { dataFilesByLha, deleteFile, uploadFiles } from '@/utils/files'
+import { dataFilesByDivisi, deleteFile, uploadFiles } from '@/utils/files'
 import CustomTextField from '@/@core/components/mui/TextField'
 import {
   createTindaklanjut,
@@ -122,11 +122,15 @@ export default function Tindaklanjut() {
     }
   }, [params])
 
-  const fetchFilesData = async lha_id => {
-    if (!lha_id) return
+  const fetchFilesData = async divisi_id => {
+    if (!divisi_id) return
 
     try {
-      const response = await dataFilesByLha(lha_id)
+      const data = {
+        lha_id: detailData?.lha_id
+      }
+
+      const response = await dataFilesByDivisi(data, divisi_id)
 
       if (response.status) {
         const responseData = response.data.map((item, index) => ({
@@ -181,14 +185,14 @@ export default function Tindaklanjut() {
   }
 
   useEffect(() => {
-    if (!detailData?.lha_id) fetchDetailData()
+    if (!detailData?.temuan?.divisi_id) fetchDetailData()
 
-    if (detailData?.lha_id) {
-      fetchFilesData(detailData?.lha_id).then(data => {
+    if (detailData?.temuan?.divisi_id) {
+      fetchFilesData(detailData?.temuan?.divisi_id).then(data => {
         setRows(data)
       })
     }
-  }, [fetchDetailData, detailData?.lha_id])
+  }, [fetchDetailData, detailData?.temuan?.divisi_id])
 
   useEffect(() => {
     if (detailData?.id && rowsFiles.length > 0) {
@@ -344,6 +348,8 @@ export default function Tindaklanjut() {
           file: ''
         })
         setIsEdit(false)
+      } else {
+        throw new Error(response.message)
       }
     } catch (error) {
       console.error('Upload gagal:', error)

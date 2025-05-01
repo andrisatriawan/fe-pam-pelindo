@@ -31,7 +31,7 @@ import Swal from 'sweetalert2'
 import Grid from '@mui/material/Grid2'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { DataGrid, gridPageCountSelector, GridPagination, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
-import { Add, Delete, Edit, PlaylistAdd } from '@mui/icons-material'
+import { Add, Delete, Edit, OpenInNew, PlaylistAdd } from '@mui/icons-material'
 import { useDebouncedCallback } from '@coreui/react-pro'
 
 import LHASelect from '@/components/LhaSelect'
@@ -42,6 +42,7 @@ import DivisiSelect from '@/components/DivisiSelect'
 import DepartemenSelect from '@/components/DepartemenSelect'
 import { useAuth } from '@/context/AuthContext'
 import CustomTextField from '@/@core/components/mui/TextField'
+import FileUploader from '@/components/InputFiles'
 
 const CustomToolbar = ({ searchQuery, setSearchQuery }) => {
   const [localSearch, setLocalSearch] = useState(searchQuery)
@@ -94,7 +95,8 @@ export default function Findings() {
     departemen: '',
     nomor: '',
     judul: '',
-    deskripsi: ''
+    deskripsi: '',
+    file: null
   })
 
   const [isEdit, setIsEdit] = useState(false)
@@ -340,15 +342,27 @@ export default function Findings() {
   }
 
   const handleCreateTemuan = async () => {
-    const dataTemuan = {
-      lha_id: formData.lha_id,
-      unit_id: formData.unit,
-      divisi_id: formData.divisi,
-      departemen_id: formData.departemen,
-      nomor: formData.nomor,
-      judul: formData.judul,
-      deskripsi: formData.deskripsi
-    }
+    // const dataTemuan = {
+    //   lha_id: formData.lha_id,
+    //   unit_id: formData.unit,
+    //   divisi_id: formData.divisi,
+    //   departemen_id: formData.departemen,
+    //   nomor: formData.nomor,
+    //   judul: formData.judul,
+    //   deskripsi: formData.deskripsi,
+    //   file: formData.file
+    // }
+
+    const dataTemuan = new FormData()
+
+    dataTemuan.append('lha_id', formData.lha_id)
+    dataTemuan.append('unit_id', formData.unit)
+    dataTemuan.append('divisi_id', formData.divisi)
+    dataTemuan.append('departemen_id', formData.departemen)
+    dataTemuan.append('nomor', formData.nomor)
+    dataTemuan.append('judul', formData.judul)
+    dataTemuan.append('deskripsi', formData.deskripsi)
+    dataTemuan.append('file', formData.file)
 
     setLoading(true)
 
@@ -421,16 +435,21 @@ export default function Findings() {
   }
 
   const handleUpdateTemuan = async () => {
-    const dataTemuan = {
-      id: formData.id,
-      lha_id: formData.lha_id,
-      unit_id: formData.unit,
-      divisi_id: formData.divisi,
-      departemen_id: formData.departemen,
-      nomor: formData.nomor,
-      judul: formData.judul,
-      deskripsi: formData.deskripsi
+    const dataTemuan = new FormData()
+
+    dataTemuan.append('lha_id', formData.lha_id)
+    dataTemuan.append('unit_id', formData.unit)
+    dataTemuan.append('divisi_id', formData.divisi)
+    dataTemuan.append('departemen_id', formData.departemen)
+    dataTemuan.append('nomor', formData.nomor)
+    dataTemuan.append('judul', formData.judul)
+    dataTemuan.append('deskripsi', formData.deskripsi)
+
+    if (formData.file) {
+      dataTemuan.append('file', formData.file)
     }
+
+    dataTemuan.append('_method', 'PUT')
 
     setLoading(true)
 
@@ -545,6 +564,10 @@ export default function Findings() {
     })
   }
 
+  const handleFileSelect = file => {
+    setFormData(prev => ({ ...prev, file }))
+  }
+
   return (
     <>
       <Dialog
@@ -614,6 +637,24 @@ export default function Findings() {
             Status
           </Typography>
           <Chip label={detailTemuan.status_name} variant='outlined' size='small' color='primary' />
+          {detailTemuan.file && (
+            <>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant='h6' gutterBottom>
+                File
+              </Typography>
+              <Button
+                size='small'
+                color='primary'
+                variant='contained'
+                sx={{ mt: 1 }}
+                onClick={() => window.open(detailTemuan.file ?? '#', '_blank', 'noopener,noreferrer')}
+                endIcon={<OpenInNew />}
+              >
+                Lihat File
+              </Button>
+            </>
+          )}
         </DialogContent>
       </Dialog>
       {user?.permissions?.includes('create temuan', 'update temuan') && (
@@ -676,7 +717,7 @@ export default function Findings() {
               placeholder='Masukkan deskripsi...'
               onChange={e => setFormData({ ...formData, deskripsi: e.target.value })}
               value={formData.deskripsi}
-              sx={{ '& .MuiInputBase-root.MuiFilledInput-root': { alignItems: 'baseline' } }}
+              sx={{ mb: 2, '& .MuiInputBase-root.MuiFilledInput-root': { alignItems: 'baseline' } }}
               slotProps={{
                 input: {
                   startAdornment: (
@@ -687,6 +728,8 @@ export default function Findings() {
                 }
               }}
             />
+            {isEdit && <span>Kosongkan file jika tidak ingin merubah file</span>}
+            <FileUploader onFileSelect={handleFileSelect} />
           </DialogContent>
           <DialogActions>
             <Button

@@ -33,7 +33,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs'
-import { Edit, Delete, Visibility as VisibilityIcon, PlaylistAdd } from '@mui/icons-material'
+import { Edit, Delete, Visibility as VisibilityIcon, PlaylistAdd, OpenInNew } from '@mui/icons-material'
 
 import { DataGrid, gridClasses } from '@mui/x-data-grid'
 
@@ -469,9 +469,25 @@ export default function DetailTemuan() {
               <Typography variant='h6' gutterBottom>
                 Status
               </Typography>
-              <Typography variant='body1' gutterBottom>
-                {detailData.status_name}
-              </Typography>
+              <Chip label={detailData.status_name} variant='outlined' size='small' color='primary' />
+              {detailData.file && (
+                <>
+                  <Divider sx={{ my: 2 }} />
+                  <Typography variant='h6' gutterBottom>
+                    File
+                  </Typography>
+                  <Button
+                    size='small'
+                    color='primary'
+                    variant='contained'
+                    sx={{ mt: 1 }}
+                    onClick={() => window.open(detailData.file ?? '#', '_blank', 'noopener,noreferrer')}
+                    endIcon={<OpenInNew />}
+                  >
+                    Lihat File
+                  </Button>
+                </>
+              )}
             </Grid2>
             <Grid2 size={{ xs: 12, md: 7 }}>
               <Box sx={{ height: 'auto', minHeight: 400 }}>

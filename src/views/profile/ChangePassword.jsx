@@ -34,18 +34,12 @@ export default function ChangePassword() {
   const [formData, setFormData] = useState({
     password: '',
     old_password: '',
-    password_confirmation: '',
-    nama: '',
-    nip: ''
+    password_confirmation: ''
   })
 
   const [loading, setLoading] = useState(false)
   const [isPasswordShown, setIsPasswordShown] = useState(false)
   const { user, setUser } = useAuth()
-
-  useEffect(() => {
-    setFormData({ nama: user?.nama, nip: user?.nip })
-  }, [user])
 
   const handleCreate = async () => {
     setLoading(true)
@@ -113,7 +107,7 @@ export default function ChangePassword() {
 
           <CardContent>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-              <TextField
+              {/* <TextField
                 size='small'
                 label='NIP'
                 fullWidth
@@ -128,7 +122,7 @@ export default function ChangePassword() {
                 value={formData.nama}
                 disabled={true}
                 onChange={e => setFormData({ ...formData, nama: e.target.value })}
-              />
+              /> */}
               <CustomTextField
                 required
                 fullWidth
