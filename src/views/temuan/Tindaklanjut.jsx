@@ -122,38 +122,41 @@ export default function Tindaklanjut() {
     }
   }, [params])
 
-  const fetchFilesData = async divisi_id => {
-    if (!divisi_id) return
+  const fetchFilesData = useCallback(
+    async divisi_id => {
+      if (!divisi_id) return
 
-    try {
-      const data = {
-        lha_id: detailData?.lha_id
-      }
+      try {
+        const data = {
+          lha_id: detailData?.lha_id
+        }
 
-      const response = await dataFilesByDivisi(data, divisi_id)
+        const response = await dataFilesByDivisi(data, divisi_id)
 
-      if (response.status) {
-        const responseData = response.data.map((item, index) => ({
-          ...item,
-          no: index + 1
-        }))
+        if (response.status) {
+          const responseData = response.data.map((item, index) => ({
+            ...item,
+            no: index + 1
+          }))
 
-        return responseData.filter((item, index, self) => index === self.findIndex(t => t.id === item.id))
-      } else {
+          return responseData.filter((item, index, self) => index === self.findIndex(t => t.id === item.id))
+        } else {
+          Swal.fire({
+            title: 'Gagal!',
+            text: response.message || 'Terjadi kesalahan',
+            icon: 'error'
+          })
+        }
+      } catch (error) {
         Swal.fire({
           title: 'Gagal!',
-          text: response.message || 'Terjadi kesalahan',
+          text: error.message || 'Terjadi kesalahan',
           icon: 'error'
         })
       }
-    } catch (error) {
-      Swal.fire({
-        title: 'Gagal!',
-        text: error.message || 'Terjadi kesalahan',
-        icon: 'error'
-      })
-    }
-  }
+    },
+    [detailData?.lha_id]
+  )
 
   const fetchTindakLanjutData = async rekomendasi_id => {
     if (!rekomendasi_id) return
@@ -192,7 +195,7 @@ export default function Tindaklanjut() {
         setRows(data)
       })
     }
-  }, [fetchDetailData, detailData?.temuan?.divisi_id])
+  }, [fetchDetailData, fetchFilesData, detailData?.temuan?.divisi_id])
 
   useEffect(() => {
     if (detailData?.id && rowsFiles.length > 0) {
