@@ -20,19 +20,22 @@ export const login = async (nip, password) => {
 
     Cookies.set('token', data.data.token, {
       expires: expiresDays,
-      secure: process.env.NODE_ENV === 'production',
+
+      // secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict'
     })
 
     Cookies.set('expires_in', data.data.expires_in, {
       expires: expiresDays,
-      secure: process.env.NODE_ENV === 'production',
+
+      // secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict'
     })
 
     Cookies.set('refresh_token', data.data.refresh_token, {
       expires: 7,
-      secure: process.env.NODE_ENV === 'production',
+
+      // secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict'
     })
 
