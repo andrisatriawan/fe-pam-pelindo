@@ -21,7 +21,9 @@ import {
   useTheme,
   MenuItem,
   Select,
-  InputLabel
+  InputLabel,
+  InputAdornment,
+  IconButton
 } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 
@@ -119,6 +121,8 @@ export default function Users() {
   })
 
   const [isEdit, setIsEdit] = useState(false)
+
+  // const [isPasswordShown, setIsPasswordShown] = useState(false)
   const [selectedRoles, setSelectedRoles] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
   const [totalRows, setTotalRows] = useState(0)
@@ -480,6 +484,8 @@ export default function Users() {
     setFormData(prev => ({ ...prev, jabatan_id: id }))
   }
 
+  // const handleClickShowPassword = () => setIsPasswordShown(show => !show)
+
   return (
     <>
       <Dialog
@@ -522,11 +528,34 @@ export default function Users() {
             value={formData.nip}
             onChange={e => setFormData({ ...formData, nip: e.target.value })}
           />
+          {/* <CustomTextField
+            required
+            variant='outlined'
+            fullWidth
+            label='Password'
+            placeholder='············'
+            value={formData.password}
+            onChange={e => setFormData({ ...formData, password: e.target.value })}
+            id='outlined-adornment-password'
+            type={isPasswordShown ? 'text' : 'password'}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }
+            }}
+          /> */}
           <TextField
             fullWidth
             label='Password'
             variant='outlined'
             margin='normal'
+            type='password'
             value={formData.password}
             onChange={e => setFormData({ ...formData, password: e.target.value })}
           />
