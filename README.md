@@ -39,12 +39,6 @@ NEXT_PUBLIC_API_URL=https://domain-backend.com/api
 
 ### 3. Jalankan Aplikasi
 
-Untuk mode development:
-
-```bash
-npm run dev
-```
-
 Untuk build dan menjalankan di production:
 
 ```bash
@@ -52,12 +46,53 @@ npm run build
 npm start
 ```
 
-### 4. Deploy (Opsional)
+### 4. Deploy ke VPS dengan Nginx
 
-Untuk VPS dengan Nginx atau menggunakan layanan seperti Vercel/Netlify:
+#### a. Jalankan dengan PM2 (disarankan)
 
-- Pastikan folder hasil build (`.next`, `out`, dll.) tersedia
-- Sesuaikan konfigurasi reverse proxy jika pakai VPS
+Install PM2 jika belum:
+
+```bash
+npm install -g pm2
+```
+
+Jalankan aplikasi:
+
+```bash
+pm start
+# atau dengan PM2
+pm run start
+pm install -g pm2
+pm run build
+pm run start
+pm2 start npm --name "nextjs-frontend" -- run start
+```
+
+#### b. Konfigurasi Nginx untuk Reverse Proxy
+
+```nginx
+server {
+    listen 80;
+    server_name domain-frontend.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+Simpan file konfigurasi Nginx Anda dan reload:
+
+```bash
+sudo systemctl reload nginx
+```
+
+Jika menggunakan HTTPS, Anda bisa tambahkan konfigurasi SSL menggunakan Let's Encrypt + Certbot.
 
 ---
 
